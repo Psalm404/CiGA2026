@@ -11,6 +11,7 @@
       --accent: #111827;
       --title-main-color: #de8a3a;
       --title-anchor-color: #4f8ec7;
+      --title-motion-x: 1px;
       --title-motion-y: 1px;
       --title-motion-rotate: 0.4deg;
       --font-size: 24px;
@@ -41,6 +42,23 @@
       --caption-y: 72%;
       --caption-w: 78%;
       --caption-h: 22%;
+      --live-room-x: 50%;
+      --live-room-y: 50%;
+      --live-room-w: 100%;
+      --live-room-h: 100%;
+      --dialog-x: 68%;
+      --dialog-y: 16%;
+      --dialog-w: 38%;
+      --dialog-text-x: 9%;
+      --dialog-text-y: 17%;
+      --dialog-text-w: 82%;
+      --dialog-text-h: 58%;
+      --dialog-font-size: 24px;
+      --dialog-text-color: #253142;
+      --dialog-highlight-color: #d94b37;
+      --sign-x: 18%;
+      --sign-y: 58%;
+      --sign-w: 22%;
     }
 
     * {
@@ -190,7 +208,7 @@
       -webkit-text-stroke: clamp(1.4px, 0.26vw, 4px) #171717;
       text-shadow: 2px 2px 0 #171717, -1px 2px 0 #171717, 1px -1px 0 #171717;
       transform: rotate(var(--tilt, 0deg)) translateY(var(--lift, 0px));
-      animation: titleDrift 4.8s ease-in-out infinite;
+      animation: titleDrift 2.6s ease-in-out infinite;
       animation-delay: var(--delay, 0s);
     }
 
@@ -351,6 +369,132 @@
       opacity: 1;
     }
 
+    .comic-stage,
+    .level-stage {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .level-stage {
+      display: none;
+      cursor: default;
+    }
+
+    .game.is-level .comic-stage {
+      display: none;
+    }
+
+    .game.is-level .level-stage {
+      display: block;
+    }
+
+    .live-room {
+      position: absolute;
+      left: var(--live-room-x);
+      top: var(--live-room-y);
+      width: var(--live-room-w);
+      height: var(--live-room-h);
+      object-fit: cover;
+      transform: translate(-50%, -50%);
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .dialog-panel {
+      position: absolute;
+      left: var(--dialog-x);
+      top: var(--dialog-y);
+      width: var(--dialog-w);
+      max-width: calc(100% - 20px);
+      transform: translate(-50%, 0);
+      pointer-events: auto;
+    }
+
+    .dialog-image {
+      display: block;
+      width: 100%;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .dialog-text {
+      position: absolute;
+      left: var(--dialog-text-x);
+      top: var(--dialog-text-y);
+      width: var(--dialog-text-w);
+      height: var(--dialog-text-h);
+      overflow: hidden;
+      color: var(--dialog-text-color);
+      font-size: var(--dialog-font-size);
+      line-height: 1.45;
+      font-weight: 700;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      pointer-events: none;
+    }
+
+    .dialog-text .highlight {
+      color: var(--dialog-highlight-color);
+    }
+
+    .dialog-text .shake {
+      display: inline-block;
+      animation: wordShake 0.42s ease-in-out infinite;
+      transform-origin: 50% 60%;
+      will-change: transform;
+    }
+
+    .sign-board {
+      position: absolute;
+      left: var(--sign-x);
+      top: var(--sign-y);
+      width: var(--sign-w);
+      transform: translate(-50%, -50%);
+      user-select: none;
+      pointer-events: none;
+      display: none;
+      z-index: 3;
+    }
+
+    .error-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .sign-board.is-visible {
+      display: block;
+    }
+
+    .error-hotspot {
+      position: absolute;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      transform: translate(-50%, -50%);
+      cursor: crosshair;
+      pointer-events: auto;
+    }
+
+    .error-hotspot::after {
+      content: "";
+      position: absolute;
+      inset: -8%;
+      border: 4px solid rgba(217, 45, 45, 0.95);
+      border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
+      opacity: 0;
+      transform: rotate(-5deg) scale(0.82);
+      transition: opacity 120ms ease, transform 120ms ease;
+      box-shadow: 0 0 0 2px rgba(255, 246, 239, 0.6);
+    }
+
+    .error-hotspot.is-found::after {
+      opacity: 1;
+      transform: rotate(-5deg) scale(1);
+    }
+
     .admin-link {
       position: fixed;
       right: 18px;
@@ -372,11 +516,36 @@
     }
 
     @keyframes titleDrift {
-      0%, 100% {
+      0%,
+      100% {
         transform: rotate(var(--tilt, 0deg)) translateY(var(--lift, 0px));
       }
-      50% {
+      35% {
         transform: rotate(calc(var(--tilt, 0deg) + var(--title-motion-rotate))) translateY(calc(var(--lift, 0px) - var(--title-motion-y)));
+      }
+      70% {
+        transform:
+          rotate(calc(var(--tilt, 0deg) - var(--title-motion-rotate)))
+          translateX(var(--title-motion-x))
+          translateY(calc(var(--lift, 0px) + var(--title-motion-y) * 0.55));
+      }
+    }
+
+    @keyframes wordShake {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(-1px, 1px) rotate(-1.4deg);
+      }
+      50% {
+        transform: translate(1px, -1px) rotate(1.2deg);
+      }
+      75% {
+        transform: translate(-1px, -1px) rotate(0.8deg);
+      }
+      100% {
+        transform: translate(1px, 1px) rotate(-0.8deg);
       }
     }
 
@@ -440,12 +609,24 @@
       </main>
 
       <section class="game" id="game" aria-label="开场漫画">
-        <div class="comic-frame">
-          <img class="comic" id="comicImage" src="assets/comic1.png" alt="开场漫画">
+        <div class="comic-stage" id="comicStage">
+          <div class="comic-frame">
+            <img class="comic" id="comicImage" src="assets/comic1.png" alt="开场漫画">
+          </div>
+          <div class="caption-box">
+            <div class="caption-text" id="captionText" aria-live="polite"></div>
+            <div class="next-tip" id="nextTip">点击继续</div>
+          </div>
         </div>
-        <div class="caption-box">
-          <div class="caption-text" id="captionText" aria-live="polite"></div>
-          <div class="next-tip" id="nextTip">点击继续</div>
+
+        <div class="level-stage" id="levelStage" aria-label="正式关卡">
+          <img class="live-room" src="assets/live_room.png" alt="" aria-hidden="true">
+          <div class="dialog-panel">
+            <img class="dialog-image" src="assets/dialogue.png" alt="" aria-hidden="true">
+            <div class="dialog-text" id="dialogText" aria-live="polite"></div>
+            <div class="error-layer" id="errorLayer" aria-label="错误区域"></div>
+          </div>
+          <img class="sign-board" id="signBoard" src="assets/wrong.png" alt="" aria-hidden="true">
         </div>
       </section>
     </div>
@@ -461,13 +642,22 @@
       accent: "#111827",
       titleMainColor: "#de8a3a",
       titleAnchorColor: "#4f8ec7",
-      titleMotion: 4,
+      titleMotion: 7,
       comicTexts: [
         "“这简直是人工智障！”",
         "愚蠢的AI 播报员在新闻联播里经常会把事实说跑偏，让观众听得一头雾水。",
         "面对频繁出现的大模型幻觉问题，严谨的新闻事实校对员再也忍不下去了！",
         "把新闻里的错误一一纠正，还大家一档真实可靠、清清楚楚的新闻联播吧~"
       ],
+      dialogText: "各位观众晚上好，欢迎收看今天的 AI 新闻联播。",
+      dialogTexts: ["各位观众晚上好，欢迎收看今天的 AI 新闻联播。"],
+      dialogFontSize: 24,
+      dialogTextColor: "#253142",
+      dialogHighlightText: "AI 新闻联播",
+      dialogHighlightColor: "#d94b37",
+      dialogShakeText: "最新消息，绝无假货",
+      dialogSigns: ["none"],
+      wrongRegions: [[]],
       layout: {
         title: { x: 50, y: 15.2, scale: 1 },
         earth: { x: 50, y: 4.6, w: 50 },
@@ -481,7 +671,11 @@
           { x: 50, y: 50, w: 88 },
           { x: 50, y: 50, w: 88 }
         ],
-        caption: { x: 50, y: 72, w: 78, h: 22 }
+        caption: { x: 50, y: 72, w: 78, h: 22 },
+        liveRoom: { x: 50, y: 50, w: 100, h: 100 },
+        dialogue: { x: 68, y: 16, w: 38 },
+        dialogTextBox: { x: 9, y: 17, w: 82, h: 58 },
+        signBoard: { x: 18, y: 58, w: 22 }
       }
     };
 
@@ -492,12 +686,18 @@
     const startBtn = document.getElementById("startBtn");
     const comicImage = document.getElementById("comicImage");
     const captionText = document.getElementById("captionText");
+    const dialogText = document.getElementById("dialogText");
+    const signBoard = document.getElementById("signBoard");
+    const errorLayer = document.getElementById("errorLayer");
     const configChannel = "BroadcastChannel" in window ? new BroadcastChannel("help-ai-anchorman") : null;
     let timer = null;
     let settings = loadSettings();
     let settingsSnapshot = "";
     let comicIndex = 0;
     let charIndex = 0;
+    let dialogueIndex = 0;
+    let dialogIndex = 0;
+    let stage = "home";
     let typingDone = false;
 
     function mergeSettings(saved) {
@@ -507,6 +707,10 @@
         comicTexts: Array.from({ length: 4 }, (_, index) => {
           return saved && saved.comicTexts && saved.comicTexts[index] !== undefined ? saved.comicTexts[index] : defaultSettings.comicTexts[index];
         }),
+        dialogTexts: normalizeDialogTexts(saved),
+        dialogShakeText: saved && saved.dialogShakeText !== undefined ? saved.dialogShakeText : defaultSettings.dialogShakeText,
+        dialogSigns: normalizeDialogSigns(saved),
+        wrongRegions: normalizeWrongRegions(saved),
         layout: {
           title: { ...defaultSettings.layout.title, ...(saved && saved.layout && saved.layout.title) },
           earth: { ...defaultSettings.layout.earth, ...(saved && saved.layout && saved.layout.earth) },
@@ -519,7 +723,11 @@
             const indexedComic = saved && saved.layout && saved.layout.comics && saved.layout.comics[index];
             return { ...defaultSettings.layout.comics[index], ...(indexedComic || namedComic) };
           }),
-          caption: { ...defaultSettings.layout.caption, ...(saved && saved.layout && saved.layout.caption) }
+          caption: { ...defaultSettings.layout.caption, ...(saved && saved.layout && saved.layout.caption) },
+          liveRoom: { ...defaultSettings.layout.liveRoom, ...(saved && saved.layout && saved.layout.liveRoom) },
+          dialogue: { ...defaultSettings.layout.dialogue, ...(saved && saved.layout && saved.layout.dialogue) },
+          dialogTextBox: { ...defaultSettings.layout.dialogTextBox, ...(saved && saved.layout && saved.layout.dialogTextBox) },
+          signBoard: { ...defaultSettings.layout.signBoard, ...(saved && saved.layout && saved.layout.signBoard) }
         }
       };
     }
@@ -561,6 +769,20 @@
       setPercent("--caption-y", settings.layout.caption.y);
       setPercent("--caption-w", settings.layout.caption.w);
       setPercent("--caption-h", settings.layout.caption.h);
+      setPercent("--live-room-x", settings.layout.liveRoom.x);
+      setPercent("--live-room-y", settings.layout.liveRoom.y);
+      setPercent("--live-room-w", settings.layout.liveRoom.w);
+      setPercent("--live-room-h", settings.layout.liveRoom.h);
+      setPercent("--dialog-x", settings.layout.dialogue.x);
+      setPercent("--dialog-y", settings.layout.dialogue.y);
+      setPercent("--dialog-w", settings.layout.dialogue.w);
+      setPercent("--dialog-text-x", settings.layout.dialogTextBox.x);
+      setPercent("--dialog-text-y", settings.layout.dialogTextBox.y);
+      setPercent("--dialog-text-w", settings.layout.dialogTextBox.w);
+      setPercent("--dialog-text-h", settings.layout.dialogTextBox.h);
+      setPercent("--sign-x", settings.layout.signBoard.x);
+      setPercent("--sign-y", settings.layout.signBoard.y);
+      setPercent("--sign-w", settings.layout.signBoard.w);
       applyComicLayout();
     }
 
@@ -573,11 +795,16 @@
 
     function applySettings() {
       document.documentElement.style.setProperty("--font-size", `${settings.fontSize}px`);
+      document.documentElement.style.setProperty("--dialog-font-size", `${settings.dialogFontSize || settings.fontSize}px`);
       document.documentElement.style.setProperty("--accent", settings.accent);
       document.documentElement.style.setProperty("--title-main-color", settings.titleMainColor);
       document.documentElement.style.setProperty("--title-anchor-color", settings.titleAnchorColor);
-      document.documentElement.style.setProperty("--title-motion-y", `${settings.titleMotion * 0.28}px`);
-      document.documentElement.style.setProperty("--title-motion-rotate", `${settings.titleMotion * 0.12}deg`);
+      document.documentElement.style.setProperty("--dialog-text-color", settings.dialogTextColor);
+      document.documentElement.style.setProperty("--dialog-highlight-color", settings.dialogHighlightColor);
+      const titleMotion = Math.max(Number(settings.titleMotion) || 0, 3);
+      document.documentElement.style.setProperty("--title-motion-x", `${titleMotion * 0.18}px`);
+      document.documentElement.style.setProperty("--title-motion-y", `${titleMotion * 0.55}px`);
+      document.documentElement.style.setProperty("--title-motion-rotate", `${titleMotion * 0.2}deg`);
       document.body.classList.toggle("cursor-off", !settings.cursor);
       applyLayout();
       settingsSnapshot = JSON.stringify(settings);
@@ -592,6 +819,172 @@
       cursor.textContent = "|";
       captionText.append(cursor);
       game.classList.toggle("ready", typingDone);
+    }
+
+    function normalizeDialogTexts(saved) {
+      if (saved && Array.isArray(saved.dialogTexts) && saved.dialogTexts.length) {
+        return saved.dialogTexts.map((text) => String(text));
+      }
+      if (saved && saved.dialogText !== undefined) {
+        const legacyTexts = String(saved.dialogText).split(/\n\s*\n/).map((text) => text.trim()).filter(Boolean);
+        return legacyTexts.length ? legacyTexts : defaultSettings.dialogTexts;
+      }
+      return defaultSettings.dialogTexts;
+    }
+
+    function normalizeDialogSigns(saved) {
+      const count = normalizeDialogTexts(saved).length;
+      const source = saved && Array.isArray(saved.dialogSigns) ? saved.dialogSigns : defaultSettings.dialogSigns;
+      return Array.from({ length: count }, (_, index) => {
+        const value = String(source[index] || "none").trim().toLowerCase();
+        return ["none", "correct", "wrong"].includes(value) ? value : "none";
+      });
+    }
+
+    function normalizeWrongRegions(saved) {
+      const count = normalizeDialogTexts(saved).length;
+      const source = saved && Array.isArray(saved.wrongRegions) ? saved.wrongRegions : defaultSettings.wrongRegions;
+      return Array.from({ length: count }, (_, index) => {
+        if (!Array.isArray(source[index])) return [];
+        return source[index].map((region) => ({
+          x: Number(region.x) || 50,
+          y: Number(region.y) || 50,
+          w: Number(region.w) || 12,
+          h: Number(region.h) || 8
+        }));
+      });
+    }
+
+    function splitTerms(value) {
+      return String(value || "")
+        .split("|")
+        .map((term) => term.trim())
+        .filter(Boolean);
+    }
+
+    function appendStyledRun(target, content, style) {
+      if (!style.shake) {
+        const mark = document.createElement("span");
+        mark.className = style.highlight ? "highlight" : "";
+        mark.textContent = content;
+        target.append(mark);
+        return;
+      }
+      Array.from(content).forEach((char, index) => {
+        const mark = document.createElement("span");
+        mark.className = [style.highlight ? "highlight" : "", "shake"].filter(Boolean).join(" ");
+        mark.style.animationDelay = `${(index % 6) * -0.07}s`;
+        mark.textContent = char;
+        target.append(mark);
+      });
+    }
+
+    function buildCharStyles(sourceText, highlight, shake) {
+      const styles = Array.from(sourceText, () => ({ highlight: false, shake: false }));
+      [
+        ...splitTerms(highlight).map((term) => ({ term, prop: "highlight" })),
+        ...splitTerms(shake).map((term) => ({ term, prop: "shake" }))
+      ].forEach(({ term, prop }) => {
+        let start = sourceText.indexOf(term);
+        while (start !== -1) {
+          for (let offset = 0; offset < term.length; offset += 1) {
+            if (styles[start + offset]) styles[start + offset][prop] = true;
+          }
+          start = sourceText.indexOf(term, start + term.length);
+        }
+      });
+      return styles;
+    }
+
+    function appendRichText(target, sourceText, visibleCount, highlight, shake) {
+      target.innerHTML = "";
+      const chars = Array.from(sourceText).slice(0, visibleCount);
+      if (!chars.length) return;
+      const styles = buildCharStyles(sourceText, highlight, shake);
+      if (!styles.some((style) => style.highlight || style.shake)) {
+        target.append(document.createTextNode(chars.join("")));
+        return;
+      }
+
+      let run = "";
+      let runStyle = styles[0];
+      chars.forEach((char, index) => {
+        const style = styles[index];
+        const sameStyle = style.highlight === runStyle.highlight && style.shake === runStyle.shake;
+        if (!sameStyle) {
+          appendStyledRun(target, run, runStyle);
+          run = "";
+          runStyle = style;
+        }
+        run += char;
+      });
+      if (run) {
+        appendStyledRun(target, run, runStyle);
+      }
+    }
+
+    function getCurrentDialogText() {
+      return settings.dialogTexts[dialogueIndex] || "";
+    }
+
+    function getCurrentSignType() {
+      return settings.dialogSigns[dialogueIndex] || "none";
+    }
+
+    function renderSignBoard() {
+      const signType = getCurrentSignType();
+      signBoard.classList.toggle("is-visible", signType !== "none");
+      if (signType === "correct") {
+        signBoard.src = "assets/correct.png";
+      } else if (signType === "wrong") {
+        signBoard.src = "assets/wrong.png";
+      }
+    }
+
+    function renderErrorRegions() {
+      errorLayer.innerHTML = "";
+      if (getCurrentSignType() !== "wrong") return;
+      const regions = settings.wrongRegions[dialogueIndex] || [];
+      regions.forEach((region) => {
+        const button = document.createElement("button");
+        button.className = "error-hotspot";
+        button.type = "button";
+        button.setAttribute("aria-label", "指出错误");
+        button.style.left = `${region.x}%`;
+        button.style.top = `${region.y}%`;
+        button.style.width = `${region.w}%`;
+        button.style.height = `${region.h}%`;
+        button.addEventListener("click", (event) => {
+          event.stopPropagation();
+          button.classList.add("is-found");
+        });
+        errorLayer.append(button);
+      });
+    }
+
+    function renderLevelState() {
+      renderSignBoard();
+      renderErrorRegions();
+    }
+
+    function renderDialog() {
+      const text = getCurrentDialogText();
+      appendRichText(dialogText, text, dialogIndex, settings.dialogHighlightText || "", settings.dialogShakeText || "");
+      const cursor = document.createElement("span");
+      cursor.className = "cursor";
+      cursor.textContent = "|";
+      dialogText.append(cursor);
+    }
+
+    function typeDialog() {
+      clearTimeout(timer);
+      const text = getCurrentDialogText();
+      renderDialog();
+      if (dialogIndex >= text.length) return;
+      timer = setTimeout(() => {
+        dialogIndex += 1;
+        typeDialog();
+      }, settings.speed);
     }
 
     function typeCaption() {
@@ -618,10 +1011,44 @@
     function startGame() {
       home.classList.add("is-hidden");
       game.classList.add("is-active");
+      game.classList.remove("is-level");
+      stage = "comic";
       showComic(0);
     }
 
+    function startLevel() {
+      clearTimeout(timer);
+      stage = "level";
+      game.classList.remove("ready");
+      game.classList.add("is-level");
+      dialogueIndex = 0;
+      dialogIndex = 0;
+      renderLevelState();
+      typeDialog();
+    }
+
+    function advanceDialog() {
+      const text = getCurrentDialogText();
+      if (dialogIndex < text.length) {
+        dialogIndex = text.length;
+        clearTimeout(timer);
+        renderDialog();
+        return;
+      }
+      if (dialogueIndex < settings.dialogTexts.length - 1) {
+        dialogueIndex += 1;
+        dialogIndex = 0;
+        renderLevelState();
+        typeDialog();
+      }
+    }
+
     function advanceComic() {
+      if (stage === "level") {
+        advanceDialog();
+        return;
+      }
+      if (stage !== "comic") return;
       const text = settings.comicTexts[comicIndex] || "";
       if (!typingDone) {
         charIndex = text.length;
@@ -632,13 +1059,20 @@
       }
       if (comicIndex < comicSources.length - 1) {
         showComic(comicIndex + 1);
+      } else {
+        startLevel();
       }
     }
 
     function reloadSettings() {
       settings = loadSettings();
       applySettings();
-      if (game.classList.contains("is-active")) {
+      if (stage === "level") {
+        dialogueIndex = 0;
+        dialogIndex = 0;
+        renderLevelState();
+        typeDialog();
+      } else if (game.classList.contains("is-active")) {
         charIndex = 0;
         typeCaption();
       }
@@ -650,7 +1084,12 @@
       if (nextSnapshot !== settingsSnapshot) {
         settings = nextSettings;
         applySettings();
-        if (game.classList.contains("is-active")) {
+        if (stage === "level") {
+          dialogueIndex = 0;
+          dialogIndex = 0;
+          renderLevelState();
+          typeDialog();
+        } else if (game.classList.contains("is-active")) {
           charIndex = 0;
           typeCaption();
         }

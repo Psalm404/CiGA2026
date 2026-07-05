@@ -17,7 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://butyyv18qnbpd" path="res://assets/clock_plate.png" id="13_u1b78"]
 [ext_resource type="Texture2D" uid="uid://bjylwnt05upij" path="res://assets/clock_minit.png" id="14_wwu6c"]
 [ext_resource type="Texture2D" uid="uid://bgp8a77tnjqho" path="res://assets/confirm_button.png" id="16_wwu6c"]
-[ext_resource type="FontFile" path="res://fonts/NotoSansSC.ttf" id="1_font"]
+[ext_resource type="FontFile" path="res://fonts/default_font.tres" id="1_font"]
 
 [node name="Level1" type="Node2D" unique_id=958875577]
 script = ExtResource("7_6r38b")

@@ -12,7 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://l2ywxlw1sm5c" path="res://assets/comic4.png" id="10_g77f0"]
 [ext_resource type="Texture2D" uid="uid://bmxyvlsr1mjoc" path="res://assets/comic-frame-transparent.png" id="11_kquld"]
 [ext_resource type="Script" uid="uid://dplsn5rnet60l" path="res://Scripts/Comic.gd" id="12_58k33"]
-[ext_resource type="FontFile" path="res://fonts/NotoSansSC.ttf" id="13_font"]
+[ext_resource type="FontFile" path="res://fonts/default_font.tres" id="13_font"]
 
 [node name="Comic" type="Node2D" unique_id=1331039313]
 script = ExtResource("12_58k33")

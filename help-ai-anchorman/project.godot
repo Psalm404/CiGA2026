@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 window/stretch/mode="canvas_items"
 
+[gui]
+
+theme/custom_font="res://fonts/default_font.tres"
+
 [dotnet]
 
 project/assembly_name="help_ai_anchorman"

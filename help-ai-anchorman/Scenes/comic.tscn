@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://l2ywxlw1sm5c" path="res://assets/comic4.png" id="10_g77f0"]
 [ext_resource type="Texture2D" uid="uid://bmxyvlsr1mjoc" path="res://assets/comic-frame-transparent.png" id="11_kquld"]
 [ext_resource type="Script" uid="uid://dplsn5rnet60l" path="res://Scripts/Comic.gd" id="12_58k33"]
+[ext_resource type="FontFile" path="res://fonts/NotoSansSC.ttf" id="13_font"]
 
 [node name="Comic" type="Node2D" unique_id=1331039313]
 script = ExtResource("12_58k33")
@@ -54,6 +55,7 @@ offset_top = 22.0
 offset_right = 456.0
 offset_bottom = 62.0
 theme_override_colors/default_color = Color(0.34407577, 0.34407574, 0.34407574, 1)
+theme_override_fonts/normal_font = ExtResource("13_font")
 theme_override_font_sizes/normal_font_size = 14
 bbcode_enabled = true
 script = ExtResource("6_uqiod")

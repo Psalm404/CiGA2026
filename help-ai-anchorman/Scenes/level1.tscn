@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://butyyv18qnbpd" path="res://assets/clock_plate.png" id="13_u1b78"]
 [ext_resource type="Texture2D" uid="uid://bjylwnt05upij" path="res://assets/clock_minit.png" id="14_wwu6c"]
 [ext_resource type="Texture2D" uid="uid://bgp8a77tnjqho" path="res://assets/confirm_button.png" id="16_wwu6c"]
+[ext_resource type="FontFile" path="res://fonts/NotoSansSC.ttf" id="1_font"]
 
 [node name="Level1" type="Node2D" unique_id=958875577]
 script = ExtResource("7_6r38b")
@@ -51,6 +52,7 @@ offset_top = 99.0
 offset_right = 1276.0
 offset_bottom = 552.0
 theme_override_colors/default_color = Color(0.30980393, 0.28627452, 0.2509804, 1)
+theme_override_fonts/normal_font = ExtResource("1_font")
 theme_override_font_sizes/normal_font_size = 18
 bbcode_enabled = true
 
@@ -81,6 +83,7 @@ offset_top = -93.565216
 offset_right = 249.5072
 offset_bottom = 95.12463
 theme_override_colors/default_color = Color(0.30937794, 0.2925795, 0.26608893, 1)
+theme_override_fonts/normal_font = ExtResource("1_font")
 theme_override_font_sizes/normal_font_size = 30
 bbcode_enabled = true
 
@@ -139,6 +142,7 @@ offset_left = 481.0
 offset_top = 502.0
 offset_right = 639.0
 offset_bottom = 544.0
+theme_override_fonts/font = ExtResource("1_font")
 text = "确认修改"
 
 [node name="Confirmbutton" type="Sprite2D" parent="TV" unique_id=426785140]
@@ -153,6 +157,7 @@ offset_left = 416.0
 offset_top = 375.0
 offset_right = 676.0
 offset_bottom = 424.0
+theme_override_fonts/font = ExtResource("1_font")
 text = "本站点的负责人是拼命学二郎。"
 
 [node name="BigEmoji" type="Label" parent="TV" unique_id=991104516]
@@ -161,6 +166,7 @@ offset_left = 488.0
 offset_top = 142.0
 offset_right = 620.0
 offset_bottom = 274.0
+theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 96
 text = "🐱"
 horizontal_alignment = 1
@@ -173,6 +179,7 @@ offset_top = 257.0
 offset_right = 644.0
 offset_bottom = 305.0
 theme_override_colors/font_color = Color(0.30692267, 0.3069227, 0.3069227, 1)
+theme_override_fonts/font = ExtResource("1_font")
 theme_override_font_sizes/font_size = 34
 text = "CAT"
 horizontal_alignment = 1
@@ -293,6 +300,7 @@ offset_right = 880.0
 offset_bottom = 496.0
 mouse_filter = 2
 theme_override_colors/default_color = Color(0.27752772, 0.27752772, 0.27752772, 1)
+theme_override_fonts/normal_font = ExtResource("1_font")
 theme_override_font_sizes/normal_font_size = 26
 
 [node name="RichTextLabel" type="RichTextLabel" parent="TV" unique_id=48007520]
@@ -301,6 +309,7 @@ offset_top = 37.0
 offset_right = 1211.0
 offset_bottom = 76.0
 theme_override_colors/default_color = Color(0.3118496, 0.31184962, 0.3118496, 1)
+theme_override_fonts/normal_font = ExtResource("1_font")
 theme_override_font_sizes/normal_font_size = 26
 text = "播报历史
 "

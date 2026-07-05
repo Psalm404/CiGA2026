@@ -21,7 +21,7 @@ window/stretch/mode="canvas_items"
 
 [gui]
 
-theme/custom_font="res://fonts/default_font.tres"
+theme/custom_font="res://fonts/NotoSansSC.ttf"
 
 [dotnet]
 

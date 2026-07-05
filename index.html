@@ -56,8 +56,6 @@
       --dialog-font-size: 24px;
       --dialog-text-color: #253142;
       --dialog-highlight-color: #d94b37;
-      --clock-hand-rotate: 270deg;
-      --clock-hour-rotate: 352.5deg;
       --correct-sign-x: 18%;
       --correct-sign-y: 58%;
       --correct-sign-w: 22%;
@@ -452,27 +450,6 @@
       will-change: transform;
     }
 
-    .dialog-text .wrong-token {
-      position: relative;
-      display: inline-block;
-      cursor: crosshair;
-      pointer-events: auto;
-    }
-
-    .dialog-text .wrong-token.is-circled::after {
-      content: "";
-      position: absolute;
-      left: -0.18em;
-      right: -0.18em;
-      top: -0.12em;
-      bottom: -0.12em;
-      border: 3px solid rgba(217, 45, 45, 0.95);
-      border-radius: 48% 52% 46% 54% / 52% 46% 54% 48%;
-      transform: rotate(-5deg);
-      pointer-events: none;
-      box-shadow: 0 0 0 2px rgba(255, 246, 239, 0.55);
-    }
-
     .sign-board {
       position: absolute;
       user-select: none;
@@ -548,113 +525,6 @@
       opacity: 0.45;
       pointer-events: none;
       filter: grayscale(0.35);
-    }
-
-    .clock-date-display {
-      display: inline-flex;
-      align-items: baseline;
-      gap: 0.16em;
-      color: #253142;
-      background: rgba(255, 250, 240, 0.74);
-      border: 2px solid rgba(97, 127, 157, 0.35);
-      border-radius: 8px 10px 9px 7px;
-      padding: 0.02em 0.24em;
-      box-shadow: 0 2px 0 rgba(97, 127, 157, 0.12);
-    }
-
-    .clock-date-display.is-editing {
-      border-color: rgba(217, 75, 55, 0.74);
-      background: #fff8ef;
-      color: #d94b37;
-    }
-
-    .clock-widget {
-      position: absolute;
-      left: 50%;
-      bottom: 7%;
-      width: 30%;
-      aspect-ratio: 1;
-      z-index: 5;
-      display: none;
-      transform: translateX(-50%) rotate(-2deg);
-      pointer-events: none;
-      user-select: none;
-    }
-
-    .clock-widget.is-visible {
-      display: block;
-    }
-
-    .clock-widget.is-editing {
-      pointer-events: auto;
-    }
-
-    .clock-face {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border: 4px solid #617f9d;
-      border-radius: 47% 53% 48% 52% / 52% 46% 54% 48%;
-      background: #fffaf0;
-      box-shadow: 0 4px 0 rgba(97, 127, 157, 0.16), inset 0 0 0 3px rgba(255, 255, 255, 0.72);
-      cursor: default;
-    }
-
-    .clock-widget.is-editing .clock-face {
-      cursor: grab;
-      border-color: #d94b37;
-    }
-
-    .clock-tick {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      color: #617f9d;
-      font-size: clamp(10px, 2vw, 16px);
-      font-weight: 900;
-      transform: translate(-50%, -50%);
-      line-height: 1;
-    }
-
-    .clock-tick.t12 { top: 12%; }
-    .clock-tick.t3 { left: 86%; }
-    .clock-tick.t6 { top: 88%; }
-    .clock-tick.t9 { left: 14%; }
-
-    .clock-hand {
-      position: absolute;
-      left: 50%;
-      bottom: 50%;
-      width: 5px;
-      border-radius: 999px;
-      background: #253142;
-      transform-origin: 50% 100%;
-      pointer-events: auto;
-      cursor: inherit;
-    }
-
-    .clock-hand.hour {
-      height: 28%;
-      background: #617f9d;
-      transform: translateX(-50%) rotate(var(--clock-hour-rotate));
-    }
-
-    .clock-hand.minute {
-      height: 38%;
-      background: #d94b37;
-      transform: translateX(-50%) rotate(var(--clock-hand-rotate));
-    }
-
-    .clock-pin {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 12%;
-      aspect-ratio: 1;
-      border-radius: 999px;
-      background: #ffbb00;
-      border: 3px solid #253142;
-      transform: translate(-50%, -50%);
     }
 
     .done-button {
@@ -838,17 +708,6 @@
             <img class="dialog-image" src="assets/dialogue.png" alt="" aria-hidden="true">
             <div class="dialog-text" id="dialogText" aria-live="polite"></div>
             <div class="error-layer" id="errorLayer" aria-label="错误区域"></div>
-            <div class="clock-widget" id="clockWidget" aria-label="可调整时间钟表">
-              <div class="clock-face" id="clockFace">
-                <span class="clock-tick t12">12</span>
-                <span class="clock-tick t3">3</span>
-                <span class="clock-tick t6">6</span>
-                <span class="clock-tick t9">9</span>
-                <span class="clock-hand hour" id="clockHourHand"></span>
-                <span class="clock-hand minute" id="clockMinuteHand"></span>
-                <span class="clock-pin"></span>
-              </div>
-            </div>
             <button class="done-button" id="doneButton" type="button">修改完毕</button>
           </div>
           <img class="sign-board correct-sign" id="correctSignBoard" src="assets/correct.png" alt="" aria-hidden="true">
@@ -937,10 +796,6 @@
     const correctSignBoard = document.getElementById("correctSignBoard");
     const wrongSignBoard = document.getElementById("wrongSignBoard");
     const errorLayer = document.getElementById("errorLayer");
-    const clockWidget = document.getElementById("clockWidget");
-    const clockFace = document.getElementById("clockFace");
-    const clockHourHand = document.getElementById("clockHourHand");
-    const clockMinuteHand = document.getElementById("clockMinuteHand");
     const doneButton = document.getElementById("doneButton");
     const configChannel = "BroadcastChannel" in window ? new BroadcastChannel("help-ai-anchorman") : null;
     let timer = null;
@@ -954,10 +809,6 @@
     let typingDone = false;
     let levelChoice = null;
     let correctionMode = false;
-    let activeClockDisplay = null;
-    let clockDragMode = null;
-    let clockState = { year: "2026", month: "7", day: "5", hour: 11, minute: 45 };
-    const editableDatePattern = /2026\s*(?:\u5e74|[./-])?\s*7\s*(?:\u6708|[./-])?\s*5\s*(?:\u65e5|\u53f7)?\s*11\s*(?:\u65f6|\u70b9|:|\uff1a)?\s*45\s*(?:\u5206)?/;
 
     function mergeSettings(saved) {
       return {
@@ -1174,39 +1025,28 @@
         .filter(Boolean);
     }
 
-    function markWrongToken(mark) {
-      if (!mark.classList.contains("wrong-token")) return;
-      mark.addEventListener("click", (event) => {
-        event.stopPropagation();
-        mark.classList.add("is-circled");
-      });
-    }
-
     function appendStyledRun(target, content, style) {
       if (!style.shake) {
         const mark = document.createElement("span");
-        mark.className = [style.highlight ? "highlight" : "", style.wrong ? "wrong-token" : ""].filter(Boolean).join(" ");
+        mark.className = [style.highlight ? "highlight" : ""].filter(Boolean).join(" ");
         mark.textContent = content;
-        markWrongToken(mark);
         target.append(mark);
         return;
       }
       Array.from(content).forEach((char, index) => {
         const mark = document.createElement("span");
-        mark.className = [style.highlight ? "highlight" : "", "shake", style.wrong ? "wrong-token" : ""].filter(Boolean).join(" ");
+        mark.className = [style.highlight ? "highlight" : "", "shake"].filter(Boolean).join(" ");
         mark.style.animationDelay = `${(index % 6) * -0.07}s`;
         mark.textContent = char;
-        markWrongToken(mark);
         target.append(mark);
       });
     }
 
-    function buildCharStyles(sourceText, highlight, shake, wrong) {
-      const styles = Array.from(sourceText, () => ({ highlight: false, shake: false, wrong: false }));
+    function buildCharStyles(sourceText, highlight, shake) {
+      const styles = Array.from(sourceText, () => ({ highlight: false, shake: false }));
       [
         ...splitTerms(highlight).map((term) => ({ term, prop: "highlight" })),
-        ...splitTerms(shake).map((term) => ({ term, prop: "shake" })),
-        ...splitTerms(wrong).map((term) => ({ term, prop: "wrong" }))
+        ...splitTerms(shake).map((term) => ({ term, prop: "shake" }))
       ].forEach(({ term, prop }) => {
         let start = sourceText.indexOf(term);
         while (start !== -1) {
@@ -1219,12 +1059,12 @@
       return styles;
     }
 
-    function appendRichText(target, sourceText, visibleCount, highlight, shake, wrong) {
+    function appendRichText(target, sourceText, visibleCount, highlight, shake) {
       target.innerHTML = "";
       const chars = Array.from(sourceText).slice(0, visibleCount);
       if (!chars.length) return;
-      const styles = buildCharStyles(sourceText, highlight, shake, wrong);
-      if (!styles.some((style) => style.highlight || style.shake || style.wrong)) {
+      const styles = buildCharStyles(sourceText, highlight, shake);
+      if (!styles.some((style) => style.highlight || style.shake)) {
         target.append(document.createTextNode(chars.join("")));
         return;
       }
@@ -1233,7 +1073,7 @@
       let runStyle = styles[0];
       chars.forEach((char, index) => {
         const style = styles[index];
-        const sameStyle = style.highlight === runStyle.highlight && style.shake === runStyle.shake && style.wrong === runStyle.wrong;
+        const sameStyle = style.highlight === runStyle.highlight && style.shake === runStyle.shake;
         if (!sameStyle) {
           appendStyledRun(target, run, runStyle);
           run = "";
@@ -1281,10 +1121,7 @@
       wrongSignBoard.classList.remove("is-picked", "is-disabled");
       wrongSignBoard.src = "assets/wrong.png";
       liveRoomImage.src = "assets/live_room.png";
-      activeClockDisplay = null;
-      clockDragMode = null;
       doneButton.classList.remove("is-visible");
-      updateClockVisibility();
     }
 
     function renderErrorRegions() {
@@ -1296,133 +1133,11 @@
       setSignsOut(false);
       renderSignBoard();
       renderErrorRegions();
-      syncClockFromCurrentDialog();
-      updateClockVisibility();
-    }
-
-    function appendPlainRich(target, text) {
-      const span = document.createElement("span");
-      span.textContent = text;
-      target.append(span);
-    }
-
-    function getClockDateParts(text) {
-      const match = editableDatePattern.exec(text);
-      if (!match) return null;
-      const values = match[0].match(/\d+/g) || ["2026", "7", "5", "11", "45"];
-      return {
-        index: match.index,
-        raw: match[0],
-        year: values[0] || "2026",
-        month: values[1] || "7",
-        day: values[2] || "5",
-        hour: Number(values[3]) || 11,
-        minute: Number(values[4]) || 45
-      };
-    }
-
-    function clampClockHour(value) {
-      const hour = Number(value);
-      if (!Number.isFinite(hour)) return 0;
-      return Math.max(0, Math.min(23, Math.round(hour)));
-    }
-
-    function clampClockMinute(value) {
-      const minute = Number(value);
-      if (!Number.isFinite(minute)) return 0;
-      return Math.max(0, Math.min(59, Math.round(minute)));
-    }
-
-    function syncClockFromCurrentDialog() {
-      const parts = getClockDateParts(getCurrentDialogText());
-      if (!parts) return;
-      clockState = {
-        year: parts.year,
-        month: parts.month,
-        day: parts.day,
-        hour: clampClockHour(parts.hour),
-        minute: clampClockMinute(parts.minute)
-      };
-      updateClockVisuals();
-    }
-
-    function updateClockVisibility() {
-      const visible = stage === "level" && Boolean(getClockDateParts(getCurrentDialogText()));
-      clockWidget.classList.toggle("is-visible", visible);
-      clockWidget.classList.toggle("is-editing", visible && correctionMode);
-    }
-
-    function updateClockVisuals() {
-      const minuteAngle = clockState.minute * 6;
-      const hourAngle = (clockState.hour % 12) * 30 + clockState.minute * 0.5;
-      document.documentElement.style.setProperty("--clock-hand-rotate", `${minuteAngle}deg`);
-      document.documentElement.style.setProperty("--clock-hour-rotate", `${hourAngle}deg`);
-      updateClockTextDisplay();
-    }
-
-    function updateClockTextDisplay() {
-      if (!activeClockDisplay) return;
-      activeClockDisplay.year.textContent = clockState.year;
-      activeClockDisplay.month.textContent = clockState.month;
-      activeClockDisplay.day.textContent = clockState.day;
-      activeClockDisplay.hour.textContent = String(clockState.hour);
-      activeClockDisplay.minute.textContent = String(clockState.minute).padStart(2, "0");
-    }
-
-    function createClockDateDisplay(parts) {
-      const wrap = document.createElement("span");
-      wrap.className = "clock-date-display";
-      wrap.classList.toggle("is-editing", correctionMode);
-      const fields = ["year", "month", "day", "hour", "minute"];
-      const refs = {};
-      fields.forEach((field, index) => {
-        const item = document.createElement("span");
-        item.dataset.clockField = field;
-        refs[field] = item;
-        wrap.append(item);
-        if (index < fields.length - 1) wrap.append(document.createTextNode(" "));
-      });
-      activeClockDisplay = refs;
-      clockState = {
-        year: parts.year,
-        month: parts.month,
-        day: parts.day,
-        hour: clampClockHour(clockState.hour),
-        minute: clampClockMinute(clockState.minute)
-      };
-      updateClockTextDisplay();
-      return wrap;
-    }
-
-    function renderCorrectionDialog(text) {
-      dialogText.innerHTML = "";
-      const parts = getClockDateParts(text);
-      if (!parts) {
-        appendRichText(dialogText, text, text.length, settings.dialogHighlightText || "", settings.dialogShakeText || "", "");
-        updateClockVisibility();
-        return;
-      }
-      appendPlainRich(dialogText, text.slice(0, parts.index));
-      dialogText.append(createClockDateDisplay(parts));
-      appendPlainRich(dialogText, text.slice(parts.index + parts.raw.length));
-      updateClockVisibility();
     }
 
     function renderDialog() {
       const text = getCurrentDialogText();
-      const level = settings.levels[dialogueIndex] || defaultSettings.levels[0];
-      if (correctionMode) {
-        renderCorrectionDialog(text);
-        return;
-      }
-      activeClockDisplay = null;
-      if (getClockDateParts(text)) {
-        syncClockFromCurrentDialog();
-        updateClockVisibility();
-      } else {
-        updateClockVisibility();
-      }
-      appendRichText(dialogText, text, dialogIndex, settings.dialogHighlightText || "", settings.dialogShakeText || "", level.wrongWords || "");
+      appendRichText(dialogText, text, dialogIndex, settings.dialogHighlightText || "", settings.dialogShakeText || "");
       const cursor = document.createElement("span");
       cursor.className = "cursor";
       cursor.textContent = "|";
@@ -1531,48 +1246,6 @@
       doneButton.classList.add("is-visible");
     }
 
-    function setClockByPointer(event, mode) {
-      const rect = clockFace.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      const dx = event.clientX - centerX;
-      const dy = event.clientY - centerY;
-      let angle = Math.atan2(dx, -dy) * 180 / Math.PI;
-      if (angle < 0) angle += 360;
-      if (mode === "hour") {
-        let hour12 = Math.round(angle / 30) % 12;
-        if (hour12 === 0) hour12 = 12;
-        const wasAfternoon = clockState.hour >= 12;
-        clockState.hour = wasAfternoon && hour12 < 12 ? hour12 + 12 : hour12;
-      } else {
-        clockState.minute = Math.round(angle / 6) % 60;
-      }
-      updateClockVisuals();
-    }
-
-    function startClockDrag(event, mode) {
-      if (!correctionMode || !clockWidget.classList.contains("is-visible")) return;
-      event.preventDefault();
-      event.stopPropagation();
-      clockDragMode = mode;
-      clockFace.setPointerCapture(event.pointerId);
-      setClockByPointer(event, clockDragMode);
-    }
-
-    function continueClockDrag(event) {
-      if (!clockDragMode) return;
-      event.preventDefault();
-      event.stopPropagation();
-      setClockByPointer(event, clockDragMode);
-    }
-
-    function stopClockDrag(event) {
-      if (!clockDragMode) return;
-      event.preventDefault();
-      event.stopPropagation();
-      clockDragMode = null;
-    }
-
     function advanceComic() {
       if (stage === "level") {
         advanceDialog();
@@ -1636,14 +1309,6 @@
       event.stopPropagation();
       chooseWrong();
     });
-    clockFace.addEventListener("click", (event) => event.stopPropagation());
-    clockFace.addEventListener("pointerdown", (event) => {
-      const mode = event.target === clockHourHand ? "hour" : "minute";
-      startClockDrag(event, mode);
-    });
-    clockFace.addEventListener("pointermove", continueClockDrag);
-    clockFace.addEventListener("pointerup", stopClockDrag);
-    clockFace.addEventListener("pointercancel", stopClockDrag);
     doneButton.addEventListener("click", (event) => {
       event.stopPropagation();
       goNextDialog();

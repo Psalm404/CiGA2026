@@ -11,8 +11,13 @@ config_version=5
 [application]
 
 config/name="help_ai_anchorman"
-config/features=PackedStringArray("4.6", "Forward Plus")
+run/main_scene="uid://w0it80yeyi6s"
+config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
+
+[display]
+
+window/stretch/mode="canvas_items"
 
 [dotnet]
 
